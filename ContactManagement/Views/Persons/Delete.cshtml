@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "Delete Contact"; 
+}
+@model PersonResponse
+@* Make it as strongly typed view to use it as input tag helper*@
+
+<h2>Delete a Contact</h2>
+<h4>Are you sure to delete this person</h4>
+<div class="center-box">
+
+    <form asp-controller="Persons" asp-action="DeleteConfirm" asp-route-personId="@Model.PersonId" method="POST">
+
+        <input type="hidden" asp-for="PersonId" />
+
+        @*First Name*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label asp-for="FirstName" class="form-label pt">First Name</label>
+            </div>
+            <div class="flex-1">
+                <input asp-for="FirstName" class="form-input" disabled/>  @* This name should be same as FirstName in PersonAddRequest*@
+            </div>
+        </div>
+
+        @*Last Name*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label asp-for="LastName" class="form-label pt">Last Name</label>
+            </div>
+            <div class="flex-1">
+                <input asp-for="LastName"  class="form-input" disabled/>  @* This name should be same as FirstName in PersonAddRequest*@
+            </div>
+        </div>
+
+        @*Email*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label asp-for="Email" class="form-label pt">Email Id</label>
+            </div>
+            <div class="flex-1">
+                <input asp-for="Email" class="form-input" disabled />  @* This name should be same as FirstName in PersonAddRequest*@
+            </div>
+        </div>
+
+        @*Mobile Number*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label asp-for="PhoneNumber" class="form-label pt">Mobile Number</label>
+            </div>
+            <div class="flex-1">
+                <input asp-for="PhoneNumber" class="form-input" disabled/>  @* This name should be same as FirstName in PersonAddRequest*@
+            </div>
+        </div>
+
+        <div class="form-field flex">
+            <div class="w-25">
+            </div>
+            <div class="flex-1">
+                <button class="button button-red-back">Delete</button>
+                <a asp-controller="Persons" asp-action="Index" class="link-hover">Back</a>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+
+

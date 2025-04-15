@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Entities_Core\Entities_Core.csproj" />
+    <ProjectReference Include="..\Entities_DTO\Entities_DTO.csproj" />
+    <ProjectReference Include="..\Service_Contracts\Service_Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

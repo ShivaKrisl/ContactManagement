@@ -1,0 +1,11 @@
+﻿<a href="~/persons/index?searchBy=@(ViewBag.currentSearchBy)&searchString=@(ViewBag.currentSearchString)&sortBy=@(ViewBag.ColumnName)&sortOrder=@(ViewBag.currentSortOrder == SortOrderEnum.ASCENDING ? SortOrderEnum.DESCENDING : SortOrderEnum.ASCENDING)">
+    @ViewBag.DisplayName
+                        @if (ViewBag.currentSortBy == ViewBag.ColumnName && ViewBag.currentSortOrder == SortOrderEnum.ASCENDING)
+                        {
+                            <i class="fa-solid fa-arrow-down"></i>
+                        }
+                        else
+                        {
+                            <i class="fa-solid fa-arrow-up"></i>
+                        }
+</a>

@@ -1,0 +1,19 @@
+# Ignore Visual Studio and build files
+ContactManagement/.vs
+ContactManagement/bin
+ContactManagement/obj
+
+ContactManagementTest/bin
+ContactManagementTest/obj
+
+Entities_Core/bin
+Entities_Core/obj
+
+Entities_DTO/bin
+Entities_DTO/obj
+
+Service_Classes/bin
+Service_Classes/obj
+
+Service_Contracts/bin
+Service_Contracts/obj

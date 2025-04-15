@@ -1,0 +1,147 @@
+﻿@{
+    ViewBag.Title = "Update Contact"; 
+}
+@model PersonRequest 
+@* Make it as strongly typed view to use it as input tag helper*@
+
+<a asp-controller="Persons" asp-action="Index" class="link-hover">Back</a>
+<h2>Update a Contact</h2>
+<div class="center-box">
+
+    <form asp-controller="Persons" asp-action="Edit" asp-route-personId="@ViewBag.personId" method="POST">
+
+        @*First Name*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label asp-for="FirstName" class="form-label pt">First Name</label>
+            </div>
+            <div class="flex-1">
+                <input asp-for="FirstName" class="form-input"/>  @* This name should be same as FirstName in PersonAddRequest*@
+                <span asp-validation-for="FirstName" class="text-red"></span>
+
+            </div>
+        </div>
+
+        @*Last Name*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label asp-for="LastName" class="form-label pt">Last Name</label>
+            </div>
+            <div class="flex-1">
+                <input asp-for="LastName"  class="form-input"/>  @* This name should be same as FirstName in PersonAddRequest*@
+                <span asp-validation-for="LastName" class="text-red"></span>
+
+            </div>
+        </div>
+
+        @*Email*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label asp-for="Email" class="form-label pt">Email Id</label>
+            </div>
+            <div class="flex-1">
+                <input asp-for="Email" class="form-input" />  @* This name should be same as FirstName in PersonAddRequest*@
+                <span asp-validation-for="Email" class="text-red"></span>
+
+            </div>
+        </div>
+
+        @*Mobile Number*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label asp-for="PhoneNumber" class="form-label pt">Mobile Number</label>
+            </div>
+            <div class="flex-1">
+                <input asp-for="PhoneNumber" class="form-input" />  @* This name should be same as FirstName in PersonAddRequest*@
+                <span asp-validation-for="PhoneNumber" class="text-red"></span>
+
+            </div>
+        </div>
+
+        @*Date of Birth*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label asp-for="DateOfBirth" class="form-label pt">Date Of Birth</label>
+            </div>
+            <div class="flex-1">
+                <input asp-for="DateOfBirth" class="form-input" />  @* This name should be same as FirstName in PersonAddRequest*@
+                <span asp-validation-for="DateOfBirth" class="text-red"></span>
+            </div>
+        </div>
+
+        @*Gender*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label asp-for="Gender" class="form-label pt">Gender</label>
+            </div>
+            <div class="flex-1">
+
+                @{
+                    string[] genders = (string[])Enum.GetNames(typeof(GenderOptions));
+                }
+
+                @foreach (string gender in genders)
+                {
+                        <input asp-for="Gender" type="radio" class="ml" value="@gender" />
+                        <label for="@gender">@gender</label> 
+                }
+                <span asp-validation-for="Gender" class="text-red"></span>
+
+
+            </div>
+        </div>
+
+        @*Country Id*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label asp-for="CountryId" class="form-label pt">Country</label>
+            </div>
+            <div class="flex-1">
+                <select asp-for="CountryId"  asp-items="@ViewBag.countries">
+                    <option value="">Please Select</option>
+                </select>
+                <span asp-validation-for="CountryId" class="text-red"></span>
+            </div>
+        </div>
+        <div class="form-field flex">
+            <div class="w-25">
+            </div>
+            <div class="flex-1">
+                <button class="button button-green-back">Submit</button>
+            </div>
+        </div>
+        <div asp-validation-summary="All" class="text-red"></div>
+        @if (ViewBag.errors != null)
+        {
+                <div class="text-red ml">
+                    <ul>
+                    @foreach (string error in ViewBag.errors)
+                    {
+                                <li class="ml">@error</li>
+                    }
+                    </ul>
+                </div>
+        }
+    </form>
+
+</div>
+
+@*These are important for performing client side validations
+    These files are first loaded in the browser and check values of text boxes with asp-for data validations
+    Thus it doesnot make any request to the server
+
+    also if these online links are not available, then it we need to load the local files as a fall back thuse we need to use asp-fallback-test and asp-fallback-src
+    asp-fallback-test is used to check if the file is already loaded in the browser
+    asp-fallback-src is used to load the local file if the online file is not available
+*@
+
+@section scripts {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer" asp-fallback-test="window.jQuery" asp-fallback-src="~/jquery.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" integrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer" asp-fallback-test="window.jQuery.validator" asp-fallback-src="~/jquery.validate.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer" asp-fallback-test="window.jQuery.validator.unobstrustive" asp-fallback-src="~/jquery.validate.unobtrusive.min.js"></script>
+
+}
+
+
