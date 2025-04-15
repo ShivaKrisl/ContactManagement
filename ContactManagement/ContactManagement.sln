@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_Classes", "..\Servi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactManagementTest", "..\ContactManagementTest\ContactManagementTest.csproj", "{4B5CA282-63E5-46CC-AD47-D878C6BDAD46}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository_Contracts", "..\Repository\Repository_Contracts.csproj", "{0CADDA26-6A28-4E43-8DD7-00FDA898B103}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository_Classes", "..\Repository_Classes\Repository_Classes.csproj", "{E455B2CF-0D58-4746-A309-FAF0C147CAFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{4B5CA282-63E5-46CC-AD47-D878C6BDAD46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B5CA282-63E5-46CC-AD47-D878C6BDAD46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B5CA282-63E5-46CC-AD47-D878C6BDAD46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CADDA26-6A28-4E43-8DD7-00FDA898B103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CADDA26-6A28-4E43-8DD7-00FDA898B103}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CADDA26-6A28-4E43-8DD7-00FDA898B103}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CADDA26-6A28-4E43-8DD7-00FDA898B103}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E455B2CF-0D58-4746-A309-FAF0C147CAFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E455B2CF-0D58-4746-A309-FAF0C147CAFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E455B2CF-0D58-4746-A309-FAF0C147CAFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E455B2CF-0D58-4746-A309-FAF0C147CAFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

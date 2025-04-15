@@ -3,6 +3,7 @@ using Service_Contracts;
 using Entities_Core;
 using Service_Classes.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Repository_Contracts;
 
 
 namespace Service_Classes
@@ -12,12 +13,12 @@ namespace Service_Classes
 
         private readonly ICountriesService _countriesService;
 
-        private readonly ApplicationDbContext _db;
+        private readonly IPersonsRepository _personsRepository;
 
-        public PersonsService(ICountriesService countriesService, ApplicationDbContext applicationDbContext)
+        public PersonsService(ICountriesService countriesService, IPersonsRepository personsRepository)
         {
             _countriesService = countriesService;
-            _db = applicationDbContext;
+            _personsRepository = personsRepository;
         }
 
        
@@ -48,13 +49,14 @@ namespace Service_Classes
                 throw new ArgumentException(nameof(personRequest), ValidationHelper.Errors);
             }
 
-            bool isEmailExists = await _db.Persons.AnyAsync(p => p.Email == personRequest.Email);
+            bool isEmailExists = await _personsRepository.GetPersonByEmail(personRequest?.Email) != null ? true : false;
             if (isEmailExists)
             {
                 throw new ArgumentException(nameof(personRequest.Email), "Email already exists");
             }
 
-            bool isPhoneExists = await _db.Persons.AnyAsync(p => p.PhoneNumber == personRequest.PhoneNumber);
+            bool isPhoneExists = await _personsRepository.GetPersonByMobile(personRequest?.PhoneNumber) != null ? true : false;
+
             if (isPhoneExists)
             {
                 throw new ArgumentException(nameof(personRequest.PhoneNumber), "Phone number already exists");
@@ -69,9 +71,7 @@ namespace Service_Classes
             Person person = personRequest.ToPerson();
             person.PersonId = Guid.NewGuid();
             
-            
-            await _db.Persons.AddAsync(person);
-            await _db.SaveChangesAsync();
+            await _personsRepository.AddPerson(person);
 
             return person.ToPersonResponse();
 
@@ -84,12 +84,8 @@ namespace Service_Classes
         /// <exception cref="NotImplementedException"></exception>
         public async Task<List<PersonResponse>?> GetAllPersons()
         {
-            if (!await _db.Persons.AnyAsync())
-            {
-                return null;
-            }
-
-            return _db.Persons.Include("Country").Select(p => p.ToPersonResponse()).ToList();
+            return (await _personsRepository.GetAllPersons())?
+            .Select(p => p.ToPersonResponse()).ToList();
         }
 
         /// <summary>
@@ -105,9 +101,9 @@ namespace Service_Classes
                 throw new ArgumentException(nameof(personId), "Invalid Person Id");
             }
 
-            Person? person = await _db.Persons.Include("Country").FirstOrDefaultAsync(p => p.PersonId == personId);
+            Person? person = await _personsRepository.GetPersonById(personId);
 
-            if(person == null)
+            if (person == null)
             {
                 return null;
             }
@@ -141,20 +137,20 @@ namespace Service_Classes
                 throw new ArgumentException(nameof(personRequest), ValidationHelper.Errors);
             }
 
-            Person? person = await _db.Persons.FirstOrDefaultAsync(p => p.PersonId == personId);
+            Person? person = await _personsRepository.GetPersonById(personId);
             if (person == null)
             {
                 return null;
             }
 
-            bool isEmailExists = await _db.Persons.AnyAsync(p => p.Email == personRequest.Email && p.PersonId != personId);
-            if (isEmailExists)
+            Person? p = await _personsRepository.GetPersonByEmail(personRequest?.Email);
+            if (p != null && p.PersonId != personId)
             {
                 throw new ArgumentException(nameof(personRequest.Email), "Email already exists");
             }
 
-            bool isPhoneExists = await _db.Persons.AnyAsync(p => p.PhoneNumber == personRequest.PhoneNumber && p.PersonId != personId);
-            if (isPhoneExists)
+            p = await _personsRepository.GetPersonByMobile(personRequest?.PhoneNumber);
+            if (p != null && p.PersonId != personId)
             {
                 throw new ArgumentException(nameof(personRequest.PhoneNumber), "Phone number already exists");
             }
@@ -165,18 +161,9 @@ namespace Service_Classes
                 throw new ArgumentException(nameof(personRequest.CountryId), "Country not found");
             }
 
-            person.FirstName = personRequest.FirstName;
-            person.LastName = personRequest.LastName;
-            person.Email = personRequest.Email;
-            person.PhoneNumber = personRequest.PhoneNumber;
-            person.DateOfBirth = personRequest.DateOfBirth;
-            person.Gender = personRequest.Gender.ToString();
-            person.CountryId = personRequest.CountryId;
-            
-            
-            await _db.SaveChangesAsync();
+           Person personUpdated = await _personsRepository.UpdatePerson(personId, personRequest.ToPerson());
 
-            return person.ToPersonResponse();
+            return personUpdated.ToPersonResponse();
         }
 
         /// <summary>
@@ -192,14 +179,7 @@ namespace Service_Classes
                 throw new ArgumentException(nameof(personId), "Invalid Person Id");
             }
 
-            Person? person = await _db.Persons.FirstOrDefaultAsync(p => p.PersonId == personId);
-            if (person == null)
-            {
-                return false;
-            }
-            _db.Persons.Remove(person);
-            await _db.SaveChangesAsync();
-            return true;
+            return await _personsRepository.DeletePerson(personId);
         }
 
       
@@ -217,30 +197,25 @@ namespace Service_Classes
                 return await this.GetAllPersons();
             }
 
-            List<PersonResponse>? _persons = await this.GetAllPersons();
-
-            if (_persons == null)
-            {
-                return null;
-            }
-
-            List<PersonResponse> personResponses = searchBy switch
+            List<PersonResponse> matchingPersons = searchBy switch
             {
                 nameof(PersonResponse.FirstName) =>
-                _persons.Where(p => p.FirstName.Contains(searchValue, StringComparison.OrdinalIgnoreCase)).ToList(),
+                (await _personsRepository.GetFilteredPersons(p => p.FirstName.Contains(searchValue, StringComparison.OrdinalIgnoreCase)))?.Select(p => p.ToPersonResponse()).ToList(),
 
-                nameof(PersonResponse.LastName) => 
-                _persons.Where(p => p.LastName.Contains(searchValue, StringComparison.OrdinalIgnoreCase)).ToList(),
+                nameof(PersonResponse.LastName) =>
+                (await _personsRepository.GetFilteredPersons(p => p.LastName.Contains(searchValue, StringComparison.OrdinalIgnoreCase)))?.Select(p => p.ToPersonResponse()).ToList(),
 
-                nameof(PersonResponse.Email) => 
-                _persons.Where(p => p.Email.Contains(searchValue, StringComparison.OrdinalIgnoreCase)).ToList(),
+                nameof(PersonResponse.Email) =>
+                (await _personsRepository.GetFilteredPersons(p => p.Email.Contains(searchValue, StringComparison.OrdinalIgnoreCase)))?.Select(p => p.ToPersonResponse()).ToList(),
 
-                nameof(PersonResponse.PhoneNumber) => 
-                _persons.Where(p => p.PhoneNumber.Contains(searchValue, StringComparison.OrdinalIgnoreCase)).ToList(),
+                nameof(PersonResponse.PhoneNumber) =>
+                (await _personsRepository.GetFilteredPersons(p => p.PhoneNumber.Contains(searchValue, StringComparison.OrdinalIgnoreCase)))?.Select(p => p.ToPersonResponse()).ToList(),
 
-                _ => _persons
+                _ => await this.GetAllPersons()
             };
-            return personResponses;
+
+            
+            return matchingPersons;
         }
 
         /// <summary>

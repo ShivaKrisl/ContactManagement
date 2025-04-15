@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 using Entities_Core;
 using Service_Classes.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Repository_Contracts;
 
 namespace Service_Classes
 {
     public class CountriesService : ICountriesService
     {
 
-        
-        private readonly ApplicationDbContext _db;
+        private readonly ICountriesRepository _countriesRepository;
 
-        public CountriesService(ApplicationDbContext applicationDbContext)
+        public CountriesService(ICountriesRepository countriesRepository)
         {
-            _db = applicationDbContext;
+            _countriesRepository = countriesRepository;
         }
 
         /// <summary>
@@ -47,9 +47,7 @@ namespace Service_Classes
             }
 
             // Check if country already exists
-            int count = await _db.Countries.CountAsync(c => c.CountryName == countryRequest.CountryName);
-    
-            if( count > 0)
+            if(await _countriesRepository.GetCountryByName(countryRequest.CountryName) != null)
             {
                 throw new ArgumentException(nameof(countryRequest), "Country already exists");
             }
@@ -57,8 +55,7 @@ namespace Service_Classes
             Country country = countryRequest.ToCountry();
             country.CountryId = Guid.NewGuid();
             
-            _db.Add(country);
-            await _db.SaveChangesAsync();
+            await _countriesRepository.AddCountry(country);
 
             return country.ToCountryResponse();
 
@@ -71,11 +68,9 @@ namespace Service_Classes
         /// <exception cref="NotImplementedException"></exception>
         public async Task<List<CountryResponse>?> GetAllCountries()
         {
-            if(_db.Countries.Count() <=0)
-            {
-                return null;
-            }
-            return await _db.Countries.Select(c => c.ToCountryResponse()).ToListAsync();
+           return (await _countriesRepository.GetAllCountries())
+            ?.Select(c => c.ToCountryResponse())
+                .ToList();
         }
 
         /// <summary>
@@ -91,7 +86,7 @@ namespace Service_Classes
                 throw new ArgumentException(nameof(countryId), "Country Id cannot be empty");
             }
 
-            Country? country = await _db.Countries.FirstOrDefaultAsync(c => c.CountryId == countryId);
+            Country? country = await _countriesRepository.GetCountryById(countryId);
             if (country == null)
             {
                 return null;

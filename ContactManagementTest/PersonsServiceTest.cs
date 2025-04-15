@@ -41,8 +41,8 @@ namespace ContactManagementTest
             // get the mocked DbContext Object
             _dbContext = dbContextMock.Object;
 
-            _countriesService = new CountriesService(_dbContext);
-            _personsService = new PersonsService(_countriesService, _dbContext);
+            _countriesService = new CountriesService(null);
+            _personsService = new PersonsService(_countriesService, null); // need to mock repository
 
             _fixture = new Fixture();
         }

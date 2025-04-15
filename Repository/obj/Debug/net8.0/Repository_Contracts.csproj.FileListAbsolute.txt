@@ -1,0 +1,16 @@
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\obj\Debug\net8.0\Repository_Contracts.csproj.AssemblyReference.cache
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\obj\Debug\net8.0\Repository_Contracts.GeneratedMSBuildEditorConfig.editorconfig
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\obj\Debug\net8.0\Repository_Contracts.AssemblyInfoInputs.cache
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\obj\Debug\net8.0\Repository_Contracts.AssemblyInfo.cs
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\obj\Debug\net8.0\Repository_Contracts.csproj.CoreCompileInputs.cache
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\obj\Debug\net8.0\Repository_Contracts.sourcelink.json
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\bin\Debug\net8.0\Repository_Contracts.deps.json
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\bin\Debug\net8.0\Repository_Contracts.dll
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\bin\Debug\net8.0\Repository_Contracts.pdb
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\bin\Debug\net8.0\Entities_Core.dll
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\bin\Debug\net8.0\Entities_Core.pdb
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\obj\Debug\net8.0\Reposito.7DF1A198.Up2Date
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\obj\Debug\net8.0\Repository_Contracts.dll
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\obj\Debug\net8.0\refint\Repository_Contracts.dll
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\obj\Debug\net8.0\Repository_Contracts.pdb
+D:\Microsoft\ASP.NET_Learn\ContactManagemet\Repository\obj\Debug\net8.0\ref\Repository_Contracts.dll
