@@ -37,7 +37,7 @@ namespace ContactManagement.Controllers
             ViewBag.currentSearchString = searchString; // to persist the search field with last searched one
             ViewBag.currentSortBy = sortBy;
             ViewBag.currentSortOrder = sortOrder;
-            return View(model:sortedPersonResponses);
+            return View(viewName:"Index",model:sortedPersonResponses);
         }
 
         [Route("[action]")]
@@ -64,13 +64,13 @@ namespace ContactManagement.Controllers
 
                 ViewBag.errors = ModelState.Values.SelectMany(e => e.Errors).Select(e => e.ErrorMessage).ToList();
 
-                return View();
+                return View(viewName : "Create");
             }
             PersonResponse personResponse = await _personsService.AddPerson(personRequest);
             return RedirectToAction("Index", "Persons");
         }
 
-        [Route("[action]/{personId:Guid}")]
+        [Route("[action]/{personId:Guid}")] 
         [HttpGet]
         public async Task<IActionResult> Edit(Guid personId)
         {

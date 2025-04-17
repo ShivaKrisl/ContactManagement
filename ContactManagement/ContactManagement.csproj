@@ -21,6 +21,11 @@
     <ProjectReference Include="..\Repository_Classes\Repository_Classes.csproj" />
     <ProjectReference Include="..\Service_Classes\Service_Classes.csproj" />
     <ProjectReference Include="..\Service_Contracts\Service_Contracts.csproj" />
+	  
   </ItemGroup>
+
+	<ItemGroup> 
+		<InternalsVisibleTo Include="ContactManagement.Tests" />
+	</ItemGroup>
 
 </Project>

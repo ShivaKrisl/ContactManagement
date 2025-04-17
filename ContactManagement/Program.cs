@@ -13,10 +13,13 @@ builder.Services.AddScoped<IPersonsRepository, PersonsRepository>();
 builder.Services.AddScoped<ICountriesService, CountriesService>();
 builder.Services.AddScoped<IPersonsService, PersonsService>();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+if(builder.Environment.IsEnvironment("Testing") == false)
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    });
+}
 
 var app = builder.Build();
 
@@ -30,3 +33,5 @@ app.UseRouting();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { } // Make the Program class partial to allow for extension in tests
