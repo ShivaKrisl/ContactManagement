@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using EntityFrameworkCoreMock;
 using Moq;
 using AutoFixture;
+using Repository_Contracts;
 
 namespace ContactManagementTest
 {
@@ -16,21 +17,30 @@ namespace ContactManagementTest
 
         private readonly IFixture _fixture;
 
+        private readonly ICountriesRepository _countriesRepository;
+
+        private readonly Mock<ICountriesRepository> _countriesRepositoryMock;
+
         public CountriesServiceTest()
         {
-            List<Country> InitialData = new List<Country>();
 
-            // Mock the DbContext
-            DbContextMock<ApplicationDbContext> dbContextMock =  new DbContextMock<ApplicationDbContext>(
-                    new DbContextOptionsBuilder<ApplicationDbContext>().Options
-                );
-            // Mock the DbSet
-            dbContextMock.CreateDbSetMock(x => x.Countries, InitialData);
+            // Initialize the mock repository
+            _countriesRepositoryMock = new Mock<ICountriesRepository>();
+            _countriesRepository = _countriesRepositoryMock.Object;
 
-            // Get the mocked DbContext Object
-            ApplicationDbContext _dbContext = dbContextMock.Object; 
+            //List<Country> InitialData = new List<Country>();
 
-            _countriesService = new CountriesService(null); // Need to Mock repository
+            //// Mock the DbContext
+            //DbContextMock<ApplicationDbContext> dbContextMock =  new DbContextMock<ApplicationDbContext>(
+            //        new DbContextOptionsBuilder<ApplicationDbContext>().Options
+            //    );
+            //// Mock the DbSet
+            //dbContextMock.CreateDbSetMock(x => x.Countries, InitialData);
+
+            //// Get the mocked DbContext Object
+            //ApplicationDbContext _dbContext = dbContextMock.Object; 
+
+            _countriesService = new CountriesService(_countriesRepository); // Need to Mock repository
 
             _fixture = new Fixture();
         }
@@ -63,6 +73,11 @@ namespace ContactManagementTest
             .With(x => x.CountryName, null as string)
             .Create();
 
+            Country country = countryRequest.ToCountry();
+
+            _countriesRepositoryMock.Setup(temp => temp.AddCountry(It.IsAny<Country>()))
+            .ReturnsAsync(country);
+
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
@@ -82,6 +97,16 @@ namespace ContactManagementTest
             .With(x => x.CountryName, "India")
             .Create();
 
+            Country country = countryRequest.ToCountry();
+
+            // Mock the repository to return the country when searching by name
+            _countriesRepositoryMock.Setup(temp => temp.GetCountryByName(It.IsAny<string>()))
+            .ReturnsAsync(country);
+
+            // Mock the repository to return the country when adding
+            _countriesRepositoryMock.Setup(temp => temp.AddCountry(It.IsAny<Country>()))
+                .ReturnsAsync(country);
+
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
@@ -99,14 +124,27 @@ namespace ContactManagementTest
         {
             // Arrange
             CountryRequest countryRequest = _fixture.Create<CountryRequest>();
+            Country country = countryRequest.ToCountry();
+
+            CountryResponse countryResponse_Expected = country.ToCountryResponse();
+
+            // Mock the repository to return null when searching by name
+            _countriesRepositoryMock.Setup(temp => temp.GetCountryByName(It.IsAny<string>()))
+            .ReturnsAsync(null as Country);
+
+            // Mock the repository to return the country when adding
+            _countriesRepositoryMock.Setup(temp => temp.AddCountry(It.IsAny<Country>()))
+            .ReturnsAsync(country);
 
             // Act
-            CountryResponse countryResponse = await _countriesService.AddCountry(countryRequest);
+            CountryResponse countryResponse_Actual = await _countriesService.AddCountry(countryRequest);
+            countryResponse_Expected.CountryId = countryResponse_Actual.CountryId;
 
             // Assert
-            Assert.NotNull(countryResponse);
-            Assert.True(countryResponse.CountryId != Guid.Empty);
-            
+            Assert.NotNull(countryResponse_Actual);
+            Assert.True(countryResponse_Actual.CountryId != Guid.Empty);
+            Assert.Equal(countryResponse_Expected, countryResponse_Actual);
+
         }
 
         #endregion
@@ -121,6 +159,9 @@ namespace ContactManagementTest
         public async Task GetAllCountries_EmptyList_ToBeEmpty()
         {
             // Act 
+            _countriesRepositoryMock.Setup(temp => temp.GetAllCountries())
+                .ReturnsAsync(null as List<Country>);
+
             List<CountryResponse>? countryResponse = await _countriesService.GetAllCountries();
             // Assert
             Assert.Null(countryResponse);
@@ -134,20 +175,24 @@ namespace ContactManagementTest
         public async Task GetAllCountries_ListExists_ToBeSuccess()
         {
             // Arrange
-            CountryRequest countryRequest1 = _fixture.Create<CountryRequest>();
-            CountryRequest countryRequest2 = _fixture.Create<CountryRequest>();
+           Country country = _fixture.Build<Country>()
+            .With(c => c.Persons, null as List<Person>)
+                .Create();
 
-            List<CountryResponse> countryResponses_Expected = new List<CountryResponse>();
-            countryResponses_Expected.Add(await _countriesService.AddCountry(countryRequest1));
-            countryResponses_Expected.Add(await _countriesService.AddCountry(countryRequest2));
+            CountryResponse countryResponse = country.ToCountryResponse();
+
+            List<CountryResponse> countrieResponses_Expected = new List<CountryResponse>() { countryResponse };
+
+            // Mock
+            _countriesRepositoryMock.Setup(temp => temp.GetAllCountries())
+            .ReturnsAsync(new List<Country>() { country });
 
             // Act
             List<CountryResponse>? countryResponses_Actual = await _countriesService.GetAllCountries();
 
             // Assert
             Assert.NotNull(countryResponses_Actual);
-            Assert.NotEmpty(countryResponses_Actual);
-            Assert.Equal(countryResponses_Expected, countryResponses_Actual);
+            Assert.Equal(countrieResponses_Expected, countryResponses_Actual);
         }
 
         #endregion
@@ -175,6 +220,9 @@ namespace ContactManagementTest
         [Fact]
         public async Task GetCountryById_NotFound_ToBeNull()
         {
+            _countriesRepositoryMock.Setup(temp => temp.GetCountryById(It.IsAny<Guid>()))
+            .ReturnsAsync(null as Country);
+
             // Act
             CountryResponse? countryResponse = await _countriesService.GetCountryById(Guid.NewGuid());
 
@@ -190,11 +238,21 @@ namespace ContactManagementTest
         public async Task GetCountryById_CountryExists_ToBeSuccess()
         {
             // Arrange
-            CountryRequest countryRequest = _fixture.Create<CountryRequest>();
+           Country country = _fixture.Build<Country>()
+            .With(c => c.Persons, null as List<Person>)
+            .Create();
 
-            CountryResponse countryResponse_Expected = await _countriesService.AddCountry(countryRequest);
+            CountryResponse countryResponse_Expected = country.ToCountryResponse();
+
+            // Mock the repository to return the country when searching by Id
+            _countriesRepositoryMock.Setup(temp => temp.GetCountryById(It.IsAny<Guid>()))
+                .ReturnsAsync(country);
+
             // Act
-            CountryResponse? countryResponse_Actual = await _countriesService.GetCountryById(countryResponse_Expected.CountryId);
+            CountryResponse? countryResponse_Actual = await _countriesService.GetCountryById(country.CountryId);
+
+            countryResponse_Expected.CountryId = countryResponse_Actual.CountryId;
+
 
             // Assert
             Assert.NotNull(countryResponse_Actual);
