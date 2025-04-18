@@ -13,6 +13,8 @@ using AutoFixture;
 using Repository_Contracts;
 using Moq;
 using System.Linq.Expressions;
+using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace ContactManagementTest
 {
@@ -34,6 +36,11 @@ namespace ContactManagementTest
 
         private readonly ICountriesRepository _countriesRepository;
 
+        private readonly Mock<IDiagnosticContext> _diagnosticContextMock;
+
+        private readonly IDiagnosticContext _diagnosticContext;
+
+    
         public PersonsServiceTest()
         {
             //// Mock the DbContext
@@ -60,8 +67,17 @@ namespace ContactManagementTest
             _personsRepositoryMock = new Mock<IPersonsRepository>();
             _personsRepository = _personsRepositoryMock.Object;
 
+
+            // Mock the DiagnosticContext
+            _diagnosticContextMock = new Mock<IDiagnosticContext>();
+            _diagnosticContext = _diagnosticContextMock.Object;
+
+            // Mock the Logger
+            var _loggerMock = new Mock<ILogger<PersonsService>>();
+            var _logger = _loggerMock.Object;
+
             _countriesService = new CountriesService(_countriesRepository);
-            _personsService = new PersonsService(_countriesService, _personsRepository); // need to mock repository
+            _personsService = new PersonsService(_countriesService, _personsRepository,_logger,_diagnosticContext); // need to mock repository
 
             _fixture = new Fixture();
         }

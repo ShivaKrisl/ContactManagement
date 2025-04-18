@@ -23,3 +23,13 @@ Repository/obj
 
 Repository_Classes/bin
 Repository_Classes/obj
+
+*.ldf
+*.mdf
+
+
+ContactManagementDb.ldf
+ContactManagementDb.mdf
+
+ContactManagementLogs.ldf
+ContactManagementLogs.mdf

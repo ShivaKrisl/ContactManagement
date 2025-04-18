@@ -1,0 +1,49 @@
+2025-04-19 01:49:37.715 +05:30 [INF] User profile is available. Using 'C:\Users\SHIVA KRISHNA\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-04-19 01:49:38.050 +05:30 [INF] Now listening on: https://localhost:7117
+2025-04-19 01:49:38.051 +05:30 [INF] Now listening on: http://localhost:5256
+2025-04-19 01:49:38.208 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2025-04-19 01:49:38.209 +05:30 [INF] Hosting environment: Development
+2025-04-19 01:49:38.209 +05:30 [INF] Content root path: D:\Microsoft\ASP.NET_Learn\ContactManagemet\ContactManagement
+2025-04-19 01:49:40.721 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/ - null null
+2025-04-19 01:49:40.909 +05:30 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /
+2025-04-19 01:49:41.045 +05:30 [INF] Executing endpoint 'ContactManagement.Controllers.PersonsController.Index (ContactManagement)'
+2025-04-19 01:49:41.328 +05:30 [INF] Route matched with {action = "Index", controller = "Persons"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String, System.String, System.String, Entities_DTO.SortOrderEnum) on controller ContactManagement.Controllers.PersonsController (ContactManagement).
+2025-04-19 01:49:43.180 +05:30 [INF] PersonsController: Index action called
+2025-04-19 01:49:43.218 +05:30 [INF] GetFilteredPersons called
+2025-04-19 01:49:57.909 +05:30 [INF] Executed DbCommand (84ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[PersonId], [p].[CountryId], [p].[DateOfBirth], [p].[Email], [p].[FirstName], [p].[Gender], [p].[LastName], [p].[PhoneNumber], [c].[CountryId], [c].[CountryName]
+FROM [Persons] AS [p]
+INNER JOIN [Countries] AS [c] ON [p].[CountryId] = [c].[CountryId]
+2025-04-19 01:49:57.971 +05:30 [INF] SortPersons called
+2025-04-19 01:49:58.075 +05:30 [INF] Executing ViewResult, running view Index.
+2025-04-19 01:49:58.606 +05:30 [INF] Executed ViewResult - view Index executed in 531.23ms.
+2025-04-19 01:49:58.611 +05:30 [INF] Executed action ContactManagement.Controllers.PersonsController.Index (ContactManagement) in 17278.5666ms
+2025-04-19 01:49:58.613 +05:30 [INF] Executed endpoint 'ContactManagement.Controllers.PersonsController.Index (ContactManagement)'
+2025-04-19 01:49:58.617 +05:30 [INF] HTTP GET / responded 200 in 17694.0951 ms
+2025-04-19 01:49:58.620 +05:30 [INF] Response:
+StatusCode: 200
+Content-Type: text/html; charset=utf-8
+Date: Fri, 18 Apr 2025 20:19:58 GMT
+Server: Kestrel
+2025-04-19 01:49:58.639 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/ - 200 null text/html; charset=utf-8 17925.0459ms
+2025-04-19 01:49:58.847 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/_framework/aspnetcore-browser-refresh.js - null null
+2025-04-19 01:49:58.872 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 24.7305ms
+2025-04-19 01:49:58.941 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/_vs/browserLink - null null
+2025-04-19 01:49:59.031 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/_vs/browserLink - 200 null text/javascript; charset=UTF-8 89.9564ms
+2025-04-19 01:49:59.185 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/favicon.ico - null null
+2025-04-19 01:49:59.191 +05:30 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /favicon.ico
+2025-04-19 01:49:59.196 +05:30 [INF] HTTP GET /favicon.ico responded 404 in 3.6861 ms
+2025-04-19 01:49:59.196 +05:30 [INF] Response:
+StatusCode: 404
+2025-04-19 01:49:59.197 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/favicon.ico - 404 0 null 11.0946ms
+2025-04-19 01:49:59.197 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7117/favicon.ico, Response status code: 404

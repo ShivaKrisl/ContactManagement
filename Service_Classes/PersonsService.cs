@@ -4,7 +4,9 @@ using Entities_Core;
 using Service_Classes.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Repository_Contracts;
-
+using Microsoft.Extensions.Logging;
+using Serilog;
+using SerilogTimings;
 
 namespace Service_Classes
 {
@@ -15,10 +17,18 @@ namespace Service_Classes
 
         private readonly IPersonsRepository _personsRepository;
 
-        public PersonsService(ICountriesService countriesService, IPersonsRepository personsRepository)
+        // logger for PersonsService logging
+        private readonly ILogger<PersonsService> _logger;
+
+        private readonly IDiagnosticContext _diagnosticContext;
+
+        public PersonsService(ICountriesService countriesService, IPersonsRepository personsRepository, ILogger<PersonsService> logger, IDiagnosticContext diagnosticContext)
         {
             _countriesService = countriesService;
             _personsRepository = personsRepository;
+
+            _diagnosticContext = diagnosticContext; // for logging the context
+            _logger = logger; // logger for PersonsService
         }
 
        
@@ -192,29 +202,41 @@ namespace Service_Classes
         /// <exception cref="NotImplementedException"></exception>
         public async Task<List<PersonResponse>?> GetFilteredPersons(string searchBy, string searchValue)
         {
-            if(string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchValue))
+
+            _logger.LogInformation("GetFilteredPersons called");
+            _logger.LogDebug($"searchBy : {searchBy} and searchValue : {searchValue}");
+
+            if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchValue))
             {
                 return await this.GetAllPersons();
             }
 
-            List<PersonResponse> matchingPersons = searchBy switch
+            List<PersonResponse> matchingPersons = new List<PersonResponse>();
+
+            using (Operation.Time("Time for filtered persons"))
             {
-                nameof(PersonResponse.FirstName) =>
-                (await _personsRepository.GetFilteredPersons(p => p.FirstName.Contains(searchValue, StringComparison.OrdinalIgnoreCase)))?.Select(p => p.ToPersonResponse()).ToList(),
 
-                nameof(PersonResponse.LastName) =>
-                (await _personsRepository.GetFilteredPersons(p => p.LastName.Contains(searchValue, StringComparison.OrdinalIgnoreCase)))?.Select(p => p.ToPersonResponse()).ToList(),
+                  matchingPersons = searchBy switch
+                {
+                    nameof(PersonResponse.FirstName) =>
+                    (await _personsRepository.GetFilteredPersons(p => p.FirstName.Contains(searchValue, StringComparison.OrdinalIgnoreCase)))?.Select(p => p.ToPersonResponse()).ToList(),
 
-                nameof(PersonResponse.Email) =>
-                (await _personsRepository.GetFilteredPersons(p => p.Email.Contains(searchValue, StringComparison.OrdinalIgnoreCase)))?.Select(p => p.ToPersonResponse()).ToList(),
+                    nameof(PersonResponse.LastName) =>
+                    (await _personsRepository.GetFilteredPersons(p => p.LastName.Contains(searchValue, StringComparison.OrdinalIgnoreCase)))?.Select(p => p.ToPersonResponse()).ToList(),
 
-                nameof(PersonResponse.PhoneNumber) =>
-                (await _personsRepository.GetFilteredPersons(p => p.PhoneNumber.Contains(searchValue, StringComparison.OrdinalIgnoreCase)))?.Select(p => p.ToPersonResponse()).ToList(),
+                    nameof(PersonResponse.Email) =>
+                    (await _personsRepository.GetFilteredPersons(p => p.Email.Contains(searchValue, StringComparison.OrdinalIgnoreCase)))?.Select(p => p.ToPersonResponse()).ToList(),
 
-                _ => await this.GetAllPersons()
-            };
+                    nameof(PersonResponse.PhoneNumber) =>
+                    (await _personsRepository.GetFilteredPersons(p => p.PhoneNumber.Contains(searchValue, StringComparison.OrdinalIgnoreCase)))?.Select(p => p.ToPersonResponse()).ToList(),
 
-            
+                    _ => await this.GetAllPersons()
+                };
+            }
+
+            // Log the filtered persons
+            _diagnosticContext.Set("Persons", matchingPersons);
+
             return matchingPersons;
         }
 
@@ -227,7 +249,10 @@ namespace Service_Classes
         /// <exception cref="NotImplementedException"></exception>
         public async Task<List<PersonResponse>?> SortPersons(List<PersonResponse>? personResponses, string sortBy, SortOrderEnum sortOrder)
         {
-           if(personResponses == null)
+            _logger.LogInformation("SortPersons called");
+            _logger.LogDebug($"sortBy : {sortBy} and sortOrder : {sortOrder}");
+
+            if (personResponses == null)
             {
                 return null;
             }

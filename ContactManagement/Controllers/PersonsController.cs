@@ -11,16 +11,28 @@ namespace ContactManagement.Controllers
         private readonly ICountriesService _countriesService;
         private readonly IPersonsService _personsService;
 
-        public PersonsController(ICountriesService countriesService, IPersonsService personsService)
+        // logger for PersonsController logging
+        private readonly ILogger<PersonsController> _logger;   
+
+        public PersonsController(ICountriesService countriesService, IPersonsService personsService, ILogger<PersonsController> logger)
         {
             _countriesService = countriesService;
             _personsService = personsService;
+
+            _logger = logger;
         }
 
         [Route("[action]")]
         [Route("/")]
         public async Task<IActionResult> Index(string? searchBy, string? searchString, string sortBy = nameof(PersonRequest.FirstName), SortOrderEnum sortOrder = SortOrderEnum.ASCENDING)
         {
+
+            _logger.LogInformation("PersonsController: Index action called");
+
+            _logger.LogDebug($"SearchBy: {searchBy}, SearchString: {searchString}, SortBy: {sortBy}, SortOrder: {sortOrder}");
+
+
+
             List<PersonResponse>? personResponses = await _personsService.GetFilteredPersons(searchBy, searchString);
 
             List<PersonResponse>? sortedPersonResponses = await _personsService.SortPersons(personResponses, sortBy, sortOrder);

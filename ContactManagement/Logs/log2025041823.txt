@@ -1,0 +1,48 @@
+2025-04-18 23:50:57.362 +05:30 [INF] User profile is available. Using 'C:\Users\SHIVA KRISHNA\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-04-18 23:50:57.509 +05:30 [INF] Now listening on: https://localhost:7117
+2025-04-18 23:50:57.509 +05:30 [INF] Now listening on: http://localhost:5256
+2025-04-18 23:50:57.569 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2025-04-18 23:50:57.570 +05:30 [INF] Hosting environment: Development
+2025-04-18 23:50:57.570 +05:30 [INF] Content root path: D:\Microsoft\ASP.NET_Learn\ContactManagemet\ContactManagement
+2025-04-18 23:50:59.674 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/ - null null
+2025-04-18 23:50:59.854 +05:30 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /
+2025-04-18 23:50:59.885 +05:30 [INF] Executing endpoint 'ContactManagement.Controllers.PersonsController.Index (ContactManagement)'
+2025-04-18 23:51:00.084 +05:30 [INF] Route matched with {action = "Index", controller = "Persons"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String, System.String, System.String, Entities_DTO.SortOrderEnum) on controller ContactManagement.Controllers.PersonsController (ContactManagement).
+2025-04-18 23:51:01.712 +05:30 [INF] PersonsController: Index action called
+2025-04-18 23:51:01.738 +05:30 [INF] GetFilteredPersons called
+2025-04-18 23:51:09.467 +05:30 [INF] Executed DbCommand (1,031ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[PersonId], [p].[CountryId], [p].[DateOfBirth], [p].[Email], [p].[FirstName], [p].[Gender], [p].[LastName], [p].[PhoneNumber], [c].[CountryId], [c].[CountryName]
+FROM [Persons] AS [p]
+INNER JOIN [Countries] AS [c] ON [p].[CountryId] = [c].[CountryId]
+2025-04-18 23:51:09.517 +05:30 [INF] SortPersons called
+2025-04-18 23:51:09.586 +05:30 [INF] Executing ViewResult, running view Index.
+2025-04-18 23:51:09.890 +05:30 [INF] Executed ViewResult - view Index executed in 307.239ms.
+2025-04-18 23:51:09.892 +05:30 [INF] Executed action ContactManagement.Controllers.PersonsController.Index (ContactManagement) in 9807.1751ms
+2025-04-18 23:51:09.893 +05:30 [INF] Executed endpoint 'ContactManagement.Controllers.PersonsController.Index (ContactManagement)'
+2025-04-18 23:51:09.894 +05:30 [INF] Response:
+StatusCode: 200
+Content-Type: text/html; charset=utf-8
+Date: Fri, 18 Apr 2025 18:21:09 GMT
+Server: Kestrel
+2025-04-18 23:51:09.931 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/ - 200 null text/html; charset=utf-8 10236.6747ms
+2025-04-18 23:51:10.093 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/_framework/aspnetcore-browser-refresh.js - null null
+2025-04-18 23:51:10.101 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 7.864ms
+2025-04-18 23:51:10.128 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/_vs/browserLink - null null
+2025-04-18 23:51:10.186 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/_vs/browserLink - 200 null text/javascript; charset=UTF-8 57.8188ms
+2025-04-18 23:51:10.303 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/favicon.ico - null null
+2025-04-18 23:51:10.305 +05:30 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /favicon.ico
+2025-04-18 23:51:10.309 +05:30 [INF] Response:
+StatusCode: 404
+2025-04-18 23:51:10.309 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/favicon.ico - 404 0 null 5.6831ms
+2025-04-18 23:51:10.310 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7117/favicon.ico, Response status code: 404
+2025-04-18 23:51:26.328 +05:30 [INF] Application is shutting down...
