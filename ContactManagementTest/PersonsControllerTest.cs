@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using ContactManagement.Controllers;
 using Entities_DTO;
 using Microsoft.AspNetCore.Mvc;
+using Castle.Core.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace ContactManagementTest
 {
@@ -27,6 +29,7 @@ namespace ContactManagementTest
 
         private readonly PersonsController _personsController;
 
+
         public PersonsControllerTest()
         {
             _fixture = new Fixture();
@@ -34,7 +37,8 @@ namespace ContactManagementTest
             _countriesServiceMock = new Mock<ICountriesService>();
             _personsService = _personsServiceMock.Object;
             _countriesService = _countriesServiceMock.Object;
-            _personsController = new PersonsController(_countriesService, _personsService);
+            var loggerMock = new Mock<ILogger<PersonsController>>();
+            _personsController = new PersonsController(_countriesService, _personsService, loggerMock.Object);
         }
 
         #region Index Method

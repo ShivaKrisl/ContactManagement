@@ -6,6 +6,7 @@ using Repository_Contracts;
 using Repository_Classes;
 using Serilog;
 using Serilog.AspNetCore;
+using ContactManagement.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,13 +45,18 @@ if(builder.Environment.IsEnvironment("Testing") == false)
 }
 
 var app = builder.Build();
-app.UseHttpLogging();
-app.UseSerilogRequestLogging(); // add Serilog middleware to log requests
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+else
+{
+    app.UseExceptionHandler("/Error"); // add built in error handling middleware 
+    app.UseExceptionalHandlingMiddleware(); // add custom middleware to handle exceptions
+}
+
+app.UseHttpLogging();
+app.UseSerilogRequestLogging(); // add Serilog middleware to log requests
 
 // logs
 //app.Logger.LogInformation("Log Info message");

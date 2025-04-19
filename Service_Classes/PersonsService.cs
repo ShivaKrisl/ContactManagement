@@ -7,6 +7,7 @@ using Repository_Contracts;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using SerilogTimings;
+using Exceptions;
 
 namespace Service_Classes
 {
@@ -150,7 +151,7 @@ namespace Service_Classes
             Person? person = await _personsRepository.GetPersonById(personId);
             if (person == null)
             {
-                return null;
+                throw new PersonNotFoundException("Person not found!!");
             }
 
             Person? p = await _personsRepository.GetPersonByEmail(personRequest?.Email);

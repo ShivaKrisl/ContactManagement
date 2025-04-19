@@ -15,6 +15,7 @@ using Moq;
 using System.Linq.Expressions;
 using Serilog;
 using Microsoft.Extensions.Logging;
+using Exceptions;
 
 namespace ContactManagementTest
 {
@@ -486,7 +487,7 @@ namespace ContactManagementTest
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task UpdatePerson_PersonNotFound_ToBeNull()
+        public async Task UpdatePerson_PersonNotFound_ToBePersonNotFoundException()
         {
             // Arrange
              PersonRequest personRequest = _fixture.Build<PersonRequest>()
@@ -499,7 +500,10 @@ namespace ContactManagementTest
             _personsRepositoryMock.Setup(temp => temp.UpdatePerson(It.IsAny<Guid>(), It.IsAny<Person>()))
                 .ReturnsAsync(null as Person);
             // Act
-            Assert.Null(await _personsService.UpdatePerson(Guid.NewGuid(), personRequest));
+            await Assert.ThrowsAsync<PersonNotFoundException>(async () =>
+            {
+                await _personsService.UpdatePerson(Guid.NewGuid(), personRequest);
+            });
 
         }
 
