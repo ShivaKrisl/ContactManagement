@@ -21,8 +21,6 @@ namespace ContactManagementTest
 {
     public class PersonsServiceTest
     {
-        private readonly IPersonsService _personsService;
-
         private readonly ICountriesService _countriesService;
 
         //private readonly ApplicationDbContext _dbContext;
@@ -40,6 +38,16 @@ namespace ContactManagementTest
         private readonly Mock<IDiagnosticContext> _diagnosticContextMock;
 
         private readonly IDiagnosticContext _diagnosticContext;
+
+        private readonly IPersonsAdderService _personsAdderService;
+
+        private readonly IPersonsDeleterService _personsDeleterService;
+
+        private readonly IPersonsGetterService _personsGetterService;
+
+        private readonly IPersonsSorterService _personsSorterService;
+
+        private readonly IPersonsUpdaterService _personsUpdaterService;
 
     
         public PersonsServiceTest()
@@ -74,11 +82,19 @@ namespace ContactManagementTest
             _diagnosticContext = _diagnosticContextMock.Object;
 
             // Mock the Logger
-            var _loggerMock = new Mock<ILogger<PersonsService>>();
+            var _loggerMock = new Mock<ILogger<IPersonsGetterService>>();
             var _logger = _loggerMock.Object;
 
+            var _loggerSorterMock = new Mock<ILogger<IPersonsSorterService>>();
+            var _loggerSorter = _loggerSorterMock.Object;
+
             _countriesService = new CountriesService(_countriesRepository);
-            _personsService = new PersonsService(_countriesService, _personsRepository,_logger,_diagnosticContext); // need to mock repository
+
+            _personsAdderService = new PersonsAdderService(_personsRepository, _countriesService);
+            _personsDeleterService = new PersonsDeleteService(_personsRepository);
+            _personsGetterService = new PersonsGetterService(_personsRepository, _logger, _diagnosticContext);
+            _personsSorterService = new PersonsSorterService(_loggerSorter);
+            _personsUpdaterService = new PersonsUpdaterService(_personsRepository, _countriesService);
 
             _fixture = new Fixture();
         }
@@ -94,7 +110,7 @@ namespace ContactManagementTest
         {
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(async () => 
-                await _personsService.AddPerson(null)
+                await _personsAdderService.AddPerson(null)
             );
         }
 
@@ -120,7 +136,7 @@ namespace ContactManagementTest
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await _personsService.AddPerson(personRequest)
+                await _personsAdderService.AddPerson(personRequest)
             );
         }
 
@@ -152,8 +168,8 @@ namespace ContactManagementTest
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                await _personsService.AddPerson(personRequest1);
-                await _personsService.AddPerson(personRequest2);
+                await _personsAdderService.AddPerson(personRequest1);
+                await _personsAdderService.AddPerson(personRequest2);
             });
         }
 
@@ -185,8 +201,8 @@ namespace ContactManagementTest
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                await _personsService.AddPerson(personRequest1);
-                await _personsService.AddPerson(personRequest2);
+                await _personsAdderService.AddPerson(personRequest1);
+                await _personsAdderService.AddPerson(personRequest2);
             });
         }
 
@@ -214,7 +230,7 @@ namespace ContactManagementTest
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await _personsService.AddPerson(personRequest)
+                await _personsAdderService.AddPerson(personRequest)
             );
         }
 
@@ -249,7 +265,7 @@ namespace ContactManagementTest
                     CountryName = "USA"
                 });
 
-            PersonResponse personResponse_Actual = await _personsService.AddPerson(personRequest);
+            PersonResponse personResponse_Actual = await _personsAdderService.AddPerson(personRequest);
 
             personResponse_Expected.PersonId = personResponse_Actual.PersonId;
             personResponse_Expected.CountryId = personResponse_Actual.CountryId;
@@ -275,7 +291,7 @@ namespace ContactManagementTest
         public async Task GetAllPersons_ListEmpty_ToBeNull()
         {
             // Act
-            List<PersonResponse>? personResponses = await _personsService.GetAllPersons();
+            List<PersonResponse>? personResponses = await _personsGetterService.GetAllPersons();
 
             // Assert
             Assert.Null(personResponses);
@@ -305,7 +321,7 @@ namespace ContactManagementTest
                 .ReturnsAsync(new List<Person>() { person });
 
             // Act
-            List<PersonResponse>? personResponses_Actual = await _personsService.GetAllPersons();
+            List<PersonResponse>? personResponses_Actual = await _personsGetterService.GetAllPersons();
 
             // Assert
             Assert.NotNull(personResponses_Actual);
@@ -326,7 +342,7 @@ namespace ContactManagementTest
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                await _personsService.GetPersonById(Guid.Empty);
+                await _personsGetterService.GetPersonById(Guid.Empty);
             });
         }
 
@@ -342,7 +358,7 @@ namespace ContactManagementTest
                 .ReturnsAsync(null as Person);
 
             // Act
-            PersonResponse? personResponse = await _personsService.GetPersonById(Guid.NewGuid());
+            PersonResponse? personResponse = await _personsGetterService.GetPersonById(Guid.NewGuid());
 
             // Assert
             Assert.Null(personResponse);
@@ -368,7 +384,7 @@ namespace ContactManagementTest
             .ReturnsAsync(person);
 
             // Act
-            PersonResponse? personResponse_Actual = await _personsService.GetPersonById(person.PersonId);
+            PersonResponse? personResponse_Actual = await _personsGetterService.GetPersonById(person.PersonId);
 
             // Assert
             Assert.NotNull(personResponse_Actual);
@@ -389,7 +405,7 @@ namespace ContactManagementTest
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                await _personsService.DeletePerson(Guid.Empty);
+                await _personsDeleterService.DeletePerson(Guid.Empty);
             });
         }
 
@@ -407,7 +423,7 @@ namespace ContactManagementTest
                 .ReturnsAsync(false);
 
             // Act
-            bool isDeleted = await _personsService.DeletePerson(Guid.NewGuid());
+            bool isDeleted = await _personsDeleterService.DeletePerson(Guid.NewGuid());
             // Assert
             Assert.False(isDeleted);
         }
@@ -432,7 +448,7 @@ namespace ContactManagementTest
             .ReturnsAsync(true);
 
             // Act
-            bool isDeleted = await _personsService.DeletePerson(person.PersonId);
+            bool isDeleted = await _personsDeleterService.DeletePerson(person.PersonId);
 
             // Assert
             Assert.True(isDeleted);
@@ -452,7 +468,7 @@ namespace ContactManagementTest
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                await _personsService.UpdatePerson(Guid.Empty, new PersonRequest());
+                await _personsUpdaterService.UpdatePerson(Guid.Empty, new PersonRequest());
             });
         }
 
@@ -478,7 +494,7 @@ namespace ContactManagementTest
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await _personsService.UpdatePerson(Guid.NewGuid(), personRequest)
+                await _personsUpdaterService.UpdatePerson(Guid.NewGuid(), personRequest)
             );
         }
 
@@ -502,7 +518,7 @@ namespace ContactManagementTest
             // Act
             await Assert.ThrowsAsync<PersonNotFoundException>(async () =>
             {
-                await _personsService.UpdatePerson(Guid.NewGuid(), personRequest);
+                await _personsUpdaterService.UpdatePerson(Guid.NewGuid(), personRequest);
             });
 
         }
@@ -534,7 +550,7 @@ namespace ContactManagementTest
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                await _personsService.UpdatePerson(person.PersonId, personRequest);
+                await _personsUpdaterService.UpdatePerson(person.PersonId, personRequest);
             });
 
         }
@@ -566,7 +582,7 @@ namespace ContactManagementTest
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                await _personsService.UpdatePerson(person.PersonId, personRequest);
+                await _personsUpdaterService.UpdatePerson(person.PersonId, personRequest);
             });
         }
 
@@ -601,7 +617,7 @@ namespace ContactManagementTest
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                await _personsService.UpdatePerson(person.PersonId, personRequest);
+                await _personsUpdaterService.UpdatePerson(person.PersonId, personRequest);
             });
         }
 
@@ -639,7 +655,7 @@ namespace ContactManagementTest
                 .ReturnsAsync(person);
 
             // Act
-            PersonResponse? personResponse_Actual = await _personsService.UpdatePerson(person.PersonId, personRequest);
+            PersonResponse? personResponse_Actual = await _personsUpdaterService.UpdatePerson(person.PersonId, personRequest);
             //personResponse_Expected.PersonId = personResponse_Actual.PersonId;
             personResponse_Expected.CountryId = personResponse_Actual.CountryId;
             personResponse_Expected.CountryName = personResponse_Actual.CountryName;
@@ -693,7 +709,7 @@ namespace ContactManagementTest
             .ReturnsAsync(people);
 
             // Act
-            List<PersonResponse>? personResponses_Actual = await _personsService.GetFilteredPersons(nameof(PersonRequest.FirstName), string.Empty);
+            List<PersonResponse>? personResponses_Actual = await _personsGetterService.GetFilteredPersons(nameof(PersonRequest.FirstName), string.Empty);
 
             // Assert
             Assert.NotNull(personResponses_Actual);
@@ -744,7 +760,7 @@ namespace ContactManagementTest
             .ReturnsAsync(people1);
 
             // Act
-            List<PersonResponse>? personResponses_Actual = await _personsService.GetFilteredPersons(nameof(PersonResponse.FirstName), "Shiva");
+            List<PersonResponse>? personResponses_Actual = await _personsGetterService.GetFilteredPersons(nameof(PersonResponse.FirstName), "Shiva");
 
             // Assert
             Assert.NotNull(personResponses_Actual);
@@ -788,7 +804,7 @@ namespace ContactManagementTest
             List<PersonResponse> personResponses_Expected = people.Select(p => p.ToPersonResponse()).ToList();
 
             // Act
-            List<PersonResponse>? personResponses_Actual = await _personsService.SortPersons(personResponses,nameof(PersonResponse.FirstName), SortOrderEnum.ASCENDING);
+            List<PersonResponse>? personResponses_Actual = await _personsSorterService.SortPersons(personResponses,nameof(PersonResponse.FirstName), SortOrderEnum.ASCENDING);
 
             // Assert
             Assert.NotNull(personResponses_Actual);

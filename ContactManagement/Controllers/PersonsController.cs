@@ -9,17 +9,29 @@ namespace ContactManagement.Controllers
     public class PersonsController : Controller
     {
         private readonly ICountriesService _countriesService;
-        private readonly IPersonsService _personsService;
+
+        private readonly IPersonsAdderService _personsAdderService;
+
+        private readonly IPersonsDeleterService _personsDeleteService;
+
+        private readonly IPersonsGetterService _personsGetterService;
+
+        private readonly IPersonsSorterService _personsSorterService;
+
+        private readonly IPersonsUpdaterService _personsUpdaterService;
 
         // logger for PersonsController logging
         private readonly ILogger<PersonsController> _logger;   
 
-        public PersonsController(ICountriesService countriesService, IPersonsService personsService, ILogger<PersonsController> logger)
+        public PersonsController(ICountriesService countriesService, ILogger<PersonsController> logger, IPersonsDeleterService personsDeleterService, IPersonsAdderService personsAdderService, IPersonsGetterService personsGetterService, IPersonsSorterService personsSorterService, IPersonsUpdaterService personsUpdaterService)
         {
             _countriesService = countriesService;
-            _personsService = personsService;
-
             _logger = logger;
+            _personsAdderService = personsAdderService;
+            _personsDeleteService = personsDeleterService;
+            _personsGetterService = personsGetterService;
+            _personsSorterService = personsSorterService;
+            _personsUpdaterService = personsUpdaterService;
         }
 
         [Route("[action]")]
@@ -33,9 +45,9 @@ namespace ContactManagement.Controllers
 
 
 
-            List<PersonResponse>? personResponses = await _personsService.GetFilteredPersons(searchBy, searchString);
+            List<PersonResponse>? personResponses = await _personsGetterService.GetFilteredPersons(searchBy, searchString);
 
-            List<PersonResponse>? sortedPersonResponses = await _personsService.SortPersons(personResponses, sortBy, sortOrder);
+            List<PersonResponse>? sortedPersonResponses = await _personsSorterService.SortPersons(personResponses, sortBy, sortOrder);
 
             ViewBag.searchFields = new Dictionary<string, string>()
             {
@@ -78,7 +90,7 @@ namespace ContactManagement.Controllers
 
                 return View(viewName : "Create");
             }
-            PersonResponse personResponse = await _personsService.AddPerson(personRequest);
+            PersonResponse personResponse = await _personsAdderService.AddPerson(personRequest);
             return RedirectToAction("Index", "Persons");
         }
 
@@ -86,7 +98,7 @@ namespace ContactManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid personId)
         {
-            PersonResponse? personResponse = await _personsService.GetPersonById(personId);
+            PersonResponse? personResponse = await _personsGetterService.GetPersonById(personId);
             if(personResponse == null)
             {
                 return RedirectToAction("Index", "Persons");
@@ -119,7 +131,7 @@ namespace ContactManagement.Controllers
                 return View();
             }
 
-            PersonResponse? personResponse = await _personsService.UpdatePerson(personId, personRequest);
+            PersonResponse? personResponse = await _personsUpdaterService.UpdatePerson(personId, personRequest);
             return RedirectToAction("Index", "Persons");
         }
 
@@ -127,7 +139,7 @@ namespace ContactManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(Guid personId)
         {
-            PersonResponse? personResponse = await _personsService.GetPersonById(personId);
+            PersonResponse? personResponse = await _personsGetterService.GetPersonById(personId);
             if (personResponse == null)
             {
                 return RedirectToAction("Index", "Persons");
@@ -140,7 +152,7 @@ namespace ContactManagement.Controllers
         [Route("[action]/{personId:Guid}")]
         public async Task<IActionResult> DeleteConfirm(Guid personId)
         {
-            bool isDeleted = await _personsService.DeletePerson(personId);
+            bool isDeleted = await _personsDeleteService.DeletePerson(personId);
             if (isDeleted) {
                 TempData["Success"] = "Person Deleted Successfully";
             }

@@ -1,0 +1,50 @@
+2025-04-20 01:34:27.758 +05:30 [INF] User profile is available. Using 'C:\Users\SHIVA KRISHNA\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-04-20 01:34:28.195 +05:30 [INF] Now listening on: https://localhost:7117
+2025-04-20 01:34:28.196 +05:30 [INF] Now listening on: http://localhost:5256
+2025-04-20 01:34:28.393 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2025-04-20 01:34:28.394 +05:30 [INF] Hosting environment: Development
+2025-04-20 01:34:28.394 +05:30 [INF] Content root path: D:\Microsoft\ASP.NET_Learn\ContactManagemet\ContactManagement
+2025-04-20 01:34:38.920 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/ - null null
+2025-04-20 01:34:39.289 +05:30 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /
+2025-04-20 01:34:39.473 +05:30 [INF] Executing endpoint 'ContactManagement.Controllers.PersonsController.Index (ContactManagement)'
+2025-04-20 01:34:43.690 +05:30 [INF] Route matched with {action = "Index", controller = "Persons"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String, System.String, System.String, Entities_DTO.SortOrderEnum) on controller ContactManagement.Controllers.PersonsController (ContactManagement).
+2025-04-20 01:34:45.627 +05:30 [INF] PersonsController: Index action called
+2025-04-20 01:34:45.650 +05:30 [INF] GetFilteredPersons called
+2025-04-20 01:34:54.520 +05:30 [INF] Executed DbCommand (97ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[PersonId], [p].[CountryId], [p].[DateOfBirth], [p].[Email], [p].[FirstName], [p].[Gender], [p].[LastName], [p].[PhoneNumber], [c].[CountryId], [c].[CountryName]
+FROM [Persons] AS [p]
+INNER JOIN [Countries] AS [c] ON [p].[CountryId] = [c].[CountryId]
+2025-04-20 01:34:54.570 +05:30 [INF] SortPersons called
+2025-04-20 01:34:54.702 +05:30 [INF] Executing ViewResult, running view Index.
+2025-04-20 01:34:55.142 +05:30 [INF] Executed ViewResult - view Index executed in 447.6481ms.
+2025-04-20 01:34:55.151 +05:30 [INF] Executed action ContactManagement.Controllers.PersonsController.Index (ContactManagement) in 11458.8942ms
+2025-04-20 01:34:55.152 +05:30 [INF] Executed endpoint 'ContactManagement.Controllers.PersonsController.Index (ContactManagement)'
+2025-04-20 01:34:55.156 +05:30 [INF] HTTP GET / responded 200 in 15856.7391 ms
+2025-04-20 01:34:55.163 +05:30 [INF] Response:
+StatusCode: 200
+Content-Type: text/html; charset=utf-8
+Date: Sat, 19 Apr 2025 20:04:55 GMT
+Server: Kestrel
+2025-04-20 01:34:55.187 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/ - 200 null text/html; charset=utf-8 16279.252ms
+2025-04-20 01:34:55.255 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/_vs/browserLink - null null
+2025-04-20 01:34:55.255 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/_framework/aspnetcore-browser-refresh.js - null null
+2025-04-20 01:34:55.301 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 42.0673ms
+2025-04-20 01:34:55.358 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/_vs/browserLink - 200 null text/javascript; charset=UTF-8 102.8808ms
+2025-04-20 01:34:55.473 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/favicon.ico - null null
+2025-04-20 01:34:55.476 +05:30 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /favicon.ico
+2025-04-20 01:34:55.489 +05:30 [INF] HTTP GET /favicon.ico responded 404 in 12.4822 ms
+2025-04-20 01:34:55.491 +05:30 [INF] Response:
+StatusCode: 404
+2025-04-20 01:34:55.493 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/favicon.ico - 404 0 null 20.4259ms
+2025-04-20 01:34:55.495 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7117/favicon.ico, Response status code: 404
+2025-04-20 01:38:40.969 +05:30 [INF] Application is shutting down...

@@ -16,12 +16,17 @@ namespace ContactManagementTest
 {
     public class PersonsControllerTest
     {
+        private readonly Mock<IPersonsAdderService> _personsAdderServiceMock;
 
-        private readonly Mock<IPersonsService> _personsServiceMock;
+        private readonly Mock<IPersonsDeleterService> _personsDeleterServiceMock;
+
+        private readonly Mock<IPersonsGetterService> _personsGetterServiceMock;
+
+        private readonly Mock<IPersonsSorterService> _personsSorterServiceMock;
+
+        private readonly Mock<IPersonsUpdaterService> _personsUpdaterServiceMock;
 
         private readonly Mock<ICountriesService> _countriesServiceMock;
-
-        private readonly IPersonsService _personsService;
 
         private readonly ICountriesService _countriesService;
 
@@ -33,12 +38,17 @@ namespace ContactManagementTest
         public PersonsControllerTest()
         {
             _fixture = new Fixture();
-            _personsServiceMock = new Mock<IPersonsService>();
             _countriesServiceMock = new Mock<ICountriesService>();
-            _personsService = _personsServiceMock.Object;
             _countriesService = _countriesServiceMock.Object;
             var loggerMock = new Mock<ILogger<PersonsController>>();
-            _personsController = new PersonsController(_countriesService, _personsService, loggerMock.Object);
+
+            _personsAdderServiceMock = new Mock<IPersonsAdderService>();
+            _personsDeleterServiceMock = new Mock<IPersonsDeleterService>();
+            _personsGetterServiceMock = new Mock<IPersonsGetterService>();
+            _personsSorterServiceMock = new Mock<IPersonsSorterService>();
+            _personsUpdaterServiceMock = new Mock<IPersonsUpdaterService>();
+
+            _personsController = new PersonsController(_countriesService, loggerMock.Object, _personsDeleterServiceMock.Object, _personsAdderServiceMock.Object, _personsGetterServiceMock.Object, _personsSorterServiceMock.Object, _personsUpdaterServiceMock.Object);
         }
 
         #region Index Method
@@ -65,9 +75,9 @@ namespace ContactManagementTest
 
             List<PersonResponse> personResponses1 = personResponses.OrderBy(p => p.FirstName).ToList();
 
-            _personsServiceMock.Setup(x => x.GetFilteredPersons(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(personResponses);
+            _personsGetterServiceMock.Setup(x => x.GetFilteredPersons(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(personResponses);
 
-            _personsServiceMock.Setup(x => x.SortPersons(It.IsAny<List<PersonResponse>>(), It.IsAny<string>(), It.IsAny<SortOrderEnum>())).ReturnsAsync(personResponses1);
+            _personsSorterServiceMock.Setup(x => x.SortPersons(It.IsAny<List<PersonResponse>>(), It.IsAny<string>(), It.IsAny<SortOrderEnum>())).ReturnsAsync(personResponses1);
 
             // Act
             IActionResult actionResult =  await _personsController.Index(nameof(PersonResponse.FirstName), "", nameof(PersonResponse.FirstName), SortOrderEnum.ASCENDING);
@@ -117,7 +127,7 @@ namespace ContactManagementTest
             _countriesServiceMock.Setup(c => c.GetAllCountries())
                 .ReturnsAsync(countryResponses);
 
-            _personsServiceMock.Setup(p => p.AddPerson(personRequest))
+            _personsAdderServiceMock.Setup(p => p.AddPerson(personRequest))
             .ReturnsAsync(personResponse);
 
             // Act
@@ -155,7 +165,7 @@ namespace ContactManagementTest
                 .Create(),
             };
 
-            _personsServiceMock.Setup(p => p.AddPerson(It.IsAny<PersonRequest>()))
+            _personsAdderServiceMock.Setup(p => p.AddPerson(It.IsAny<PersonRequest>()))
             .ReturnsAsync(personResponse);
 
             _countriesServiceMock.Setup(c => c.GetAllCountries())
