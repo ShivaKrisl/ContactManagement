@@ -7,15 +7,8 @@ using System.Threading.Tasks;
 
 namespace Service_Contracts
 {
-    public interface ICountriesService
+    public interface ICountriesGetterService
     {
-        /// <summary>
-        /// Add a new Country
-        /// </summary>
-        /// <param name="countryRequest"></param>
-        /// <returns></returns>
-        public Task<CountryResponse> AddCountry(CountryRequest countryRequest);
-
         /// <summary>
         /// Get All Countries
         /// </summary>

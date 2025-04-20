@@ -21,7 +21,7 @@ namespace ContactManagementTest
 {
     public class PersonsServiceTest
     {
-        private readonly ICountriesService _countriesService;
+        private readonly ICountriesGetterService _countriesGetterService;
 
         //private readonly ApplicationDbContext _dbContext;
 
@@ -88,13 +88,13 @@ namespace ContactManagementTest
             var _loggerSorterMock = new Mock<ILogger<IPersonsSorterService>>();
             var _loggerSorter = _loggerSorterMock.Object;
 
-            _countriesService = new CountriesService(_countriesRepository);
+            _countriesGetterService = new CountriesGetterService(_countriesRepository);
 
-            _personsAdderService = new PersonsAdderService(_personsRepository, _countriesService);
+            _personsAdderService = new PersonsAdderService(_personsRepository, _countriesGetterService);
             _personsDeleterService = new PersonsDeleteService(_personsRepository);
             _personsGetterService = new PersonsGetterService(_personsRepository, _logger, _diagnosticContext);
             _personsSorterService = new PersonsSorterService(_loggerSorter);
-            _personsUpdaterService = new PersonsUpdaterService(_personsRepository, _countriesService);
+            _personsUpdaterService = new PersonsUpdaterService(_personsRepository, _countriesGetterService);
 
             _fixture = new Fixture();
         }

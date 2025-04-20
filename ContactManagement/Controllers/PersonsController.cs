@@ -8,7 +8,7 @@ namespace ContactManagement.Controllers
     [Route("[controller]")]
     public class PersonsController : Controller
     {
-        private readonly ICountriesService _countriesService;
+        private readonly ICountriesGetterService _countriesGetterService;
 
         private readonly IPersonsAdderService _personsAdderService;
 
@@ -23,9 +23,9 @@ namespace ContactManagement.Controllers
         // logger for PersonsController logging
         private readonly ILogger<PersonsController> _logger;   
 
-        public PersonsController(ICountriesService countriesService, ILogger<PersonsController> logger, IPersonsDeleterService personsDeleterService, IPersonsAdderService personsAdderService, IPersonsGetterService personsGetterService, IPersonsSorterService personsSorterService, IPersonsUpdaterService personsUpdaterService)
+        public PersonsController(ICountriesGetterService countriesService, ILogger<PersonsController> logger, IPersonsDeleterService personsDeleterService, IPersonsAdderService personsAdderService, IPersonsGetterService personsGetterService, IPersonsSorterService personsSorterService, IPersonsUpdaterService personsUpdaterService)
         {
-            _countriesService = countriesService;
+            _countriesGetterService = countriesService;
             _logger = logger;
             _personsAdderService = personsAdderService;
             _personsDeleteService = personsDeleterService;
@@ -68,7 +68,7 @@ namespace ContactManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            List<CountryResponse>? countryResponses = await _countriesService.GetAllCountries();
+            List<CountryResponse>? countryResponses = await _countriesGetterService.GetAllCountries();
             ViewBag.countries = countryResponses?.Select(c => new SelectListItem()
             {
                 Text = c.CountryName,
@@ -83,7 +83,7 @@ namespace ContactManagement.Controllers
         {
             if (!ModelState.IsValid)
             {
-                List<CountryResponse>? countryResponses = await _countriesService.GetAllCountries();
+                List<CountryResponse>? countryResponses = await _countriesGetterService.GetAllCountries();
                 ViewBag.countries = countryResponses;
 
                 ViewBag.errors = ModelState.Values.SelectMany(e => e.Errors).Select(e => e.ErrorMessage).ToList();
@@ -104,7 +104,7 @@ namespace ContactManagement.Controllers
                 return RedirectToAction("Index", "Persons");
             }
 
-            List<CountryResponse>? countryResponses = await _countriesService.GetAllCountries();
+            List<CountryResponse>? countryResponses = await _countriesGetterService.GetAllCountries();
             ViewBag.countries = countryResponses?.Select(c => new SelectListItem()
             {
                 Text = c.CountryName,
@@ -122,7 +122,7 @@ namespace ContactManagement.Controllers
         {
             if (!ModelState.IsValid)
             {
-                List<CountryResponse>? countryResponses = await _countriesService.GetAllCountries();
+                List<CountryResponse>? countryResponses = await _countriesGetterService.GetAllCountries();
 
                 ViewBag.countries = countryResponses;
                 ViewBag.personId = personId;

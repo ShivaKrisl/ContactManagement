@@ -1,0 +1,82 @@
+2025-04-20 16:08:11.039 +05:30 [INF] User profile is available. Using 'C:\Users\SHIVA KRISHNA\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-04-20 16:08:11.461 +05:30 [INF] Now listening on: https://localhost:7117
+2025-04-20 16:08:11.461 +05:30 [INF] Now listening on: http://localhost:5256
+2025-04-20 16:08:11.656 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2025-04-20 16:08:11.657 +05:30 [INF] Hosting environment: Development
+2025-04-20 16:08:11.657 +05:30 [INF] Content root path: D:\Microsoft\ASP.NET_Learn\ContactManagemet\ContactManagement
+2025-04-20 16:08:17.621 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/ - null null
+2025-04-20 16:08:18.314 +05:30 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /
+2025-04-20 16:08:18.366 +05:30 [INF] Executing endpoint 'ContactManagement.Controllers.PersonsController.Index (ContactManagement)'
+2025-04-20 16:08:18.501 +05:30 [INF] Route matched with {action = "Index", controller = "Persons"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String, System.String, System.String, Entities_DTO.SortOrderEnum) on controller ContactManagement.Controllers.PersonsController (ContactManagement).
+2025-04-20 16:08:21.099 +05:30 [INF] PersonsController: Index action called
+2025-04-20 16:08:21.132 +05:30 [INF] GetFilteredPersons called
+2025-04-20 16:08:30.557 +05:30 [INF] Executed DbCommand (97ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[PersonId], [p].[CountryId], [p].[DateOfBirth], [p].[Email], [p].[FirstName], [p].[Gender], [p].[LastName], [p].[PhoneNumber], [c].[CountryId], [c].[CountryName]
+FROM [Persons] AS [p]
+INNER JOIN [Countries] AS [c] ON [p].[CountryId] = [c].[CountryId]
+2025-04-20 16:08:30.617 +05:30 [INF] SortPersons called
+2025-04-20 16:08:30.736 +05:30 [INF] Executing ViewResult, running view Index.
+2025-04-20 16:08:31.129 +05:30 [INF] Executed ViewResult - view Index executed in 400.5327ms.
+2025-04-20 16:08:31.134 +05:30 [INF] Executed action ContactManagement.Controllers.PersonsController.Index (ContactManagement) in 12624.6955ms
+2025-04-20 16:08:31.136 +05:30 [INF] Executed endpoint 'ContactManagement.Controllers.PersonsController.Index (ContactManagement)'
+2025-04-20 16:08:31.139 +05:30 [INF] HTTP GET / responded 200 in 12820.7250 ms
+2025-04-20 16:08:31.141 +05:30 [INF] Response:
+StatusCode: 200
+Content-Type: text/html; charset=utf-8
+Date: Sun, 20 Apr 2025 10:38:30 GMT
+Server: Kestrel
+2025-04-20 16:08:31.158 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/ - 200 null text/html; charset=utf-8 13541.1242ms
+2025-04-20 16:08:31.204 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/StyleSheet.css - null null
+2025-04-20 16:08:31.205 +05:30 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /StyleSheet.css
+2025-04-20 16:08:31.212 +05:30 [INF] The file /StyleSheet.css was not modified
+2025-04-20 16:08:31.213 +05:30 [INF] HTTP GET /StyleSheet.css responded 304 in 7.3976 ms
+2025-04-20 16:08:31.214 +05:30 [INF] Response:
+StatusCode: 304
+Content-Type: text/css
+Accept-Ranges: bytes
+ETag: [Redacted]
+Last-Modified: Sat, 12 Apr 2025 11:26:14 GMT
+2025-04-20 16:08:31.215 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/StyleSheet.css - 304 null text/css 11.2825ms
+2025-04-20 16:08:31.219 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/_framework/aspnetcore-browser-refresh.js - null null
+2025-04-20 16:08:31.220 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/_vs/browserLink - null null
+2025-04-20 16:08:31.221 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/logo.jpeg?v=6kPBUQecJC5GLC7O3irEsgHH7tDf53-o9vCR0mrRqQ0 - null null
+2025-04-20 16:08:31.223 +05:30 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /logo.jpeg
+2025-04-20 16:08:31.223 +05:30 [INF] The file /logo.jpeg was not modified
+2025-04-20 16:08:31.223 +05:30 [INF] HTTP GET /logo.jpeg responded 304 in 0.6600 ms
+2025-04-20 16:08:31.223 +05:30 [INF] Response:
+StatusCode: 304
+Content-Type: image/jpeg
+Accept-Ranges: bytes
+ETag: [Redacted]
+Last-Modified: Mon, 14 Apr 2025 12:44:47 GMT
+2025-04-20 16:08:31.224 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/logo.jpeg?v=6kPBUQecJC5GLC7O3irEsgHH7tDf53-o9vCR0mrRqQ0 - 304 null image/jpeg 2.6652ms
+2025-04-20 16:08:31.234 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 15.6671ms
+2025-04-20 16:08:31.360 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/_vs/browserLink - 200 null text/javascript; charset=UTF-8 139.4684ms
+2025-04-20 16:08:31.426 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7117/favicon.ico - null null
+2025-04-20 16:08:31.426 +05:30 [INF] Request:
+Protocol: HTTP/2
+Method: GET
+Scheme: https
+PathBase: 
+Path: /favicon.ico
+2025-04-20 16:08:31.430 +05:30 [INF] HTTP GET /favicon.ico responded 404 in 3.7686 ms
+2025-04-20 16:08:31.431 +05:30 [INF] Response:
+StatusCode: 404
+2025-04-20 16:08:31.431 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7117/favicon.ico - 404 0 null 5.2233ms
+2025-04-20 16:08:31.433 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7117/favicon.ico, Response status code: 404
+2025-04-20 16:08:43.232 +05:30 [INF] Application is shutting down...

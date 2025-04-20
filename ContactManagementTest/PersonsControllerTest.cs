@@ -26,9 +26,9 @@ namespace ContactManagementTest
 
         private readonly Mock<IPersonsUpdaterService> _personsUpdaterServiceMock;
 
-        private readonly Mock<ICountriesService> _countriesServiceMock;
+        private readonly Mock<ICountriesGetterService> _countriesGetterServiceMock;
 
-        private readonly ICountriesService _countriesService;
+        private readonly ICountriesGetterService _countriesGetterService;
 
         private readonly IFixture _fixture;
 
@@ -38,8 +38,8 @@ namespace ContactManagementTest
         public PersonsControllerTest()
         {
             _fixture = new Fixture();
-            _countriesServiceMock = new Mock<ICountriesService>();
-            _countriesService = _countriesServiceMock.Object;
+            _countriesGetterServiceMock = new Mock<ICountriesGetterService>();
+            _countriesGetterService = _countriesGetterServiceMock.Object;
             var loggerMock = new Mock<ILogger<PersonsController>>();
 
             _personsAdderServiceMock = new Mock<IPersonsAdderService>();
@@ -48,7 +48,7 @@ namespace ContactManagementTest
             _personsSorterServiceMock = new Mock<IPersonsSorterService>();
             _personsUpdaterServiceMock = new Mock<IPersonsUpdaterService>();
 
-            _personsController = new PersonsController(_countriesService, loggerMock.Object, _personsDeleterServiceMock.Object, _personsAdderServiceMock.Object, _personsGetterServiceMock.Object, _personsSorterServiceMock.Object, _personsUpdaterServiceMock.Object);
+            _personsController = new PersonsController(_countriesGetterService, loggerMock.Object, _personsDeleterServiceMock.Object, _personsAdderServiceMock.Object, _personsGetterServiceMock.Object, _personsSorterServiceMock.Object, _personsUpdaterServiceMock.Object);
         }
 
         #region Index Method
@@ -124,7 +124,7 @@ namespace ContactManagementTest
              .With(p => p.PhoneNumber, "1234567890")
              .Create();
 
-            _countriesServiceMock.Setup(c => c.GetAllCountries())
+            _countriesGetterServiceMock.Setup(c => c.GetAllCountries())
                 .ReturnsAsync(countryResponses);
 
             _personsAdderServiceMock.Setup(p => p.AddPerson(personRequest))
@@ -168,7 +168,7 @@ namespace ContactManagementTest
             _personsAdderServiceMock.Setup(p => p.AddPerson(It.IsAny<PersonRequest>()))
             .ReturnsAsync(personResponse);
 
-            _countriesServiceMock.Setup(c => c.GetAllCountries())
+            _countriesGetterServiceMock.Setup(c => c.GetAllCountries())
             .ReturnsAsync(countryResponses);
 
             // Act

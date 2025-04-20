@@ -15,17 +15,17 @@ namespace Service_Classes
     {
         private readonly IPersonsRepository _personsRepository;
 
-        private readonly ICountriesService _countriesService;
+        private readonly ICountriesGetterService _countriesGetterService;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="personsRepository"></param>
         /// <param name="countriesService"></param>
-        public PersonsAdderService(IPersonsRepository personsRepository, ICountriesService countriesService)
+        public PersonsAdderService(IPersonsRepository personsRepository, ICountriesGetterService countriesService)
         {
             _personsRepository = personsRepository;
-            _countriesService = countriesService;
+            _countriesGetterService = countriesService;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Service_Classes
                 throw new ArgumentException(nameof(personRequest.PhoneNumber), "Phone number already exists");
             }
 
-            CountryResponse? countryResponse = await _countriesService.GetCountryById(personRequest.CountryId);
+            CountryResponse? countryResponse = await _countriesGetterService.GetCountryById(personRequest.CountryId);
             if (countryResponse == null)
             {
                 throw new ArgumentException(nameof(personRequest.CountryId), "Country not found");

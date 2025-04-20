@@ -33,8 +33,10 @@ builder.Services.AddHttpLogging(logging => // add HttpLogging Service
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 builder.Services.AddScoped<IPersonsRepository, PersonsRepository>();
-builder.Services.AddScoped<ICountriesService, CountriesService>();
 
+
+builder.Services.AddScoped<ICountriesAdderService, CountriesAdderService>();
+builder.Services.AddScoped<ICountriesGetterService, CountriesGetterService>();
 builder.Services.AddScoped<IPersonsAdderService, PersonsAdderService>();
 builder.Services.AddScoped<IPersonsDeleterService, PersonsDeleteService>();
 builder.Services.AddScoped<IPersonsGetterService, PersonsGetterService>();

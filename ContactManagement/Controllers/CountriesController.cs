@@ -7,11 +7,11 @@ namespace ContactManagement.Controllers
     [Route("[controller]")]
     public class CountriesController : Controller
     {
-        private readonly ICountriesService _countriesService;
+        private readonly ICountriesAdderService _countriesAdderService;
 
-        public CountriesController(ICountriesService countriesService)
+        public CountriesController(ICountriesAdderService countriesService)
         {
-            _countriesService = countriesService;
+            _countriesAdderService = countriesService;
         }
 
         [Route("[action]")]
@@ -32,7 +32,7 @@ namespace ContactManagement.Controllers
                 return RedirectToAction("Add", "Countries");   
             }
 
-            CountryResponse countryResponse = await _countriesService.AddCountry(countryRequest);
+            CountryResponse countryResponse = await _countriesAdderService.AddCountry(countryRequest);
 
             return RedirectToAction("Index", "Persons");
         }
